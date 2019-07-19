@@ -1,0 +1,59 @@
+{
+	"name": "distributions-service",
+	"version": "0.0.1",
+	"main": "dist/index.js",
+	"scripts": {
+		"build": "npx babel src -d dist",
+		"execute-service": "cd dist && node index.js",
+		"start": "npm run build && npm run execute-service",
+		"watch-service": "npm-watch start"
+	},
+	"keywords": [],
+	"author": "Tyson Hester",
+	"license": "ISC",
+	"devDependencies": {
+		"@babel/cli": "^7.5.0",
+		"@babel/core": "^7.5.4",
+		"@babel/plugin-proposal-object-rest-spread": "^7.5.4",
+		"@babel/plugin-transform-async-to-generator": "^7.5.0",
+		"@babel/polyfill": "^7.4.4",
+		"@babel/preset-env": "^7.5.4",
+		"npm-watch": "^0.6.0"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/ironman9967/distribution-service.git"
+	},
+	"bugs": {
+		"url": "https://github.com/ironman9967/distribution-service/issues"
+	},
+	"homepage": "https://github.com/ironman9967/distribution-service#readme",
+	"description": "",
+	"babel": {
+		"presets": [
+			"@babel/preset-env"
+		],
+		"plugins": [
+			"@babel/plugin-proposal-object-rest-spread",
+			"@babel/plugin-transform-async-to-generator"
+		]
+	},
+	"watch": {
+		"start": {
+			"patterns": [
+				"src"
+			],
+			"extensions": "js",
+			"quite": true
+		}
+	},
+	"dependencies": {
+		"@hapi/good": "^8.2.0",
+		"@hapi/good-console": "^8.1.0",
+		"@hapi/good-squeeze": "^5.2.0",
+		"@hapi/hapi": "^18.3.1",
+		"@tweenjs/tween.js": "^17.4.0",
+		"lodash": "^4.17.15",
+		"socket.io": "^2.2.0"
+	}
+}
