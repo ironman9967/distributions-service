@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 
 import '@babel/polyfill'
 
@@ -8,55 +9,28 @@ import socketio from 'socket.io'
 import { get as _get } from 'lodash/fp'
 import TWEEN from '@tweenjs/tween.js'
 
-import { createDistroCreator } from './distro'
+import { createServerCreator } from './server'
 
-const getDistro = ({
-	easeFuncName,
-	size,
-	start,
-	end
-}) => {
-	const [ createDistro ] = createDistroCreator(parseInt(size))
-	const ease = _get(easeFuncName)(TWEEN.Easing)
-	const [ createStartEnd ] = createDistro(ease)
-	return createStartEnd(parseInt(start), parseInt(end))
-}
+import { createTweenDistroCreator } from './distro'
 
-const startServer = async port => {
-	const server = Hapi.server({ port })
-	const io = socketio(server.listener)
+export const start = async () => {
 
-	await server.register({
-		plugin: Good,
-		options: {
-			reporters: {
-				console: [
-					{
-						module: '@hapi/good-squeeze',
-						name: 'Squeeze',
-						args: [{ log: '*', response: '*' }]
-					},
-					{
-						module: '@hapi/good-console'
-					},
-					'stdout'
-				]
-			}
-		}
+	const createDistro = createTweenDistroCreator({
+		TWEEN,
+		_get
 	})
 
-	server.route({
-		method: 'GET',
-		path: '/api/distro/start-end/{easeFuncName}/{size}/{start}/{end}',
-		handler: ({ params }) => getDistro(params)
+	const createServer = createServerCreator({
+		Hapi,
+		Good,
+		socketio,
+		_get,
+		createDistro
 	})
-	io.on('connection', socket => socket.on('get-distro', async params => {
-		socket.emit(`distro-${ params.id }`, await getDistro(params))
-	}))
+
+	const server = await createServer({ port: 8080 })
 
 	await server.start()
 
-	console.log(`server up at ${ server.info.uri }`)
+	console.log(`server up on ${server.info.uri}`)
 }
-
-startServer(8080)

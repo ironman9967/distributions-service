@@ -1,5 +1,5 @@
 
-export const createDistroCreator = size => ([
+const createDistroCreator = size => ([
 	ease => ([
 		async (start, end) => {
 			const distro = []
@@ -10,3 +10,18 @@ export const createDistroCreator = size => ([
 		}
 	])
 ])
+
+export const createTweenDistroCreator = ({
+	TWEEN,
+	_get
+}) => ({
+	easeFuncName,
+	size,
+	start,
+	end
+}) => {
+	const [ createDistro ] = createDistroCreator(parseInt(size))
+	const ease = _get(easeFuncName)(TWEEN.Easing)
+	const [ createStartEnd ] = createDistro(ease)
+	return createStartEnd(parseInt(start), parseInt(end))
+}
