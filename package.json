@@ -6,7 +6,8 @@
 		"build": "rm -rf dist && npx babel src -d dist && cp package.json dist",
 		"index": "node dist/index.js",
 		"start": "npm run build && npm run index -- $1",
-		"watch": "npm-watch start",
+		"start-service": "npm run build && npm run index -- serve",
+		"watch": "npm-watch start-service",
 		"publish-patch": "npm run build && npm version patch && npm publish && git push"
 	},
 	"keywords": [],
@@ -39,7 +40,7 @@
 		]
 	},
 	"watch": {
-		"start": {
+		"start-service": {
 			"patterns": [
 				"src"
 			],
