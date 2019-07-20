@@ -2,6 +2,16 @@
 
 import '@babel/polyfill'
 
+import cli from 'cli'
+
+const args = cli.parse({
+	serve: [ 's', 'start distribution service', 'true', false ]
+})
+
+console.log(process.argv)
+console.log(__dirname)
+// console.log(args)
+
 import Hapi from '@hapi/hapi'
 import Good from '@hapi/good'
 import socketio from 'socket.io'
@@ -14,7 +24,6 @@ import { createServerCreator } from './server'
 import { createTweenDistroCreator } from './distro'
 
 export const start = async () => {
-
 	const createDistro = createTweenDistroCreator({
 		TWEEN,
 		_get
