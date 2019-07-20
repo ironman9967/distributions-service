@@ -10,7 +10,7 @@
 
 ## commands
 `npx distributions-service serve`
-- `--port`|`-p` - [NUMBER]    Port for the 'serve' command (Default is 8080)
+- `--port`|`-p` - [NUMBER] Port for the 'serve' command (Default is 8080)
 
 `npx distributions-service distro`
 - `--shape`|`-s` - [STRING] Shape function for the 'distro' command (Default is Linear.None)
