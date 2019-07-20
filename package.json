@@ -6,7 +6,8 @@
 		"build": "rm -rf dist && npx babel src -d dist",
 		"execute-service": "cd dist && node index.js",
 		"start": "npm run build && npm run execute-service",
-		"watch-service": "npm-watch start"
+		"watch-service": "npm-watch start",
+		"publish-patch": "npm run build && npm version patch && npm publish"
 	},
 	"keywords": [],
 	"author": "Tyson Hester",
