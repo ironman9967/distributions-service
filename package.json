@@ -7,7 +7,7 @@
 		"execute-service": "cd dist && node index.js",
 		"start": "npm run build && npm run execute-service",
 		"watch-service": "npm-watch start",
-		"publish-patch": "npm run build && npm version patch && npm publish"
+		"publish-patch": "npm run build && npm version patch && npm publish && git push"
 	},
 	"keywords": [],
 	"author": "Tyson Hester",
