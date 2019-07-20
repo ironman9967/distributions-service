@@ -3,10 +3,12 @@
 	"version": "0.0.6",
 	"bin": "dist/index.js",
 	"scripts": {
-		"build": "rm -rf dist && npx babel src -d dist",
+		"build": "rm -rf dist && npx babel src -d dist && cp package.json dist",
+
 		"index": "node dist/index.js",
-		"start": "npm run build && npm run index",
+		"start": "npm run build && npm run index -- $1",
 		"watch": "npm-watch start",
+
 		"publish-patch": "npm run build && npm version patch && npm publish && git push"
 	},
 	"keywords": [],
