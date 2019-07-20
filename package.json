@@ -1,6 +1,6 @@
 {
 	"name": "distributions-service",
-	"version": "0.0.5",
+	"version": "0.0.6",
 	"bin": "dist/index.js",
 	"scripts": {
 		"build": "rm -rf dist && npx babel src -d dist",
