@@ -13,7 +13,7 @@
 - `--port`|`-p` - [NUMBER]    Port for the 'serve' command (Default is 8080)
 
 `npx distributions-service distro`
-- `--shape`|`-s` - shape [STRING] Shape function for the 'distro' command (Default is Linear.None)
+- `--shape`|`-s` - [STRING] Shape function for the 'distro' command (Default is Linear.None)
 - `--length`|`-l` - [NUMBER] Length of the distribution for the 'distro' command  (Default is 10)
 - `--start`|`-t` - [NUMBER] Starting number for the 'distro' command (Default is 1)
 - `--end`|`-e` - [NUMBER] Ending number for the 'distro' command (Default is 100)
