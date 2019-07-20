@@ -4,8 +4,8 @@
 	"bin": "dist/index.js",
 	"scripts": {
 		"build": "rm -rf dist && npx babel src -d dist",
-		"run-index": "cd dist && node index.js",
-		"start": "npm run build && npm run run-index",
+		"index": "node dist/index.js",
+		"start": "npm run build && npm run index",
 		"watch": "npm-watch start",
 		"publish-patch": "npm run build && npm version patch && npm publish && git push"
 	},

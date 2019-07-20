@@ -10,6 +10,7 @@ const args = cli.parse({
 
 console.log(process.argv)
 console.log(__dirname)
+console.log(require('path').resolve('./'))
 // console.log(args)
 
 import Hapi from '@hapi/hapi'
