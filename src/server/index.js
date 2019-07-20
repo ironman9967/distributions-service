@@ -33,7 +33,7 @@ export const createServerCreator = ({
 		path: '/api/distro/start-end/{shape}/{length}/{start}/{end}',
 		handler: ({ params }) => createDistro(params)
 	})
-	io.on('connection', socket => socket.on('get-distro', async params => {
+	io.on('connection', socket => socket.on('distro', async params => {
 		socket.emit(`distro-${ params.id }`, await createDistro(params))
 	}))
 
