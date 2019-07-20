@@ -35,7 +35,7 @@ export const serve = async ({ port }) => {
 
 	await server.start()
 
-	cli.ok('server up on ${server.info.uri}')
+	cli.ok(`server up on ${server.info.uri}`)
 }
 
 cli.enable('version')
