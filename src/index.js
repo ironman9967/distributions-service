@@ -55,6 +55,7 @@ cli.main(async (args, {
 	start,
 	end
 }) => {
+	cli.ok(`v${version}`)
 	switch (cli.command) {
 		case 'serve':
 			serve({ port })
