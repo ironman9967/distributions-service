@@ -22,7 +22,6 @@
 `npx distributions-service distro -s Linear.None -l 10 -t 1 -e 100`
  - output - `[ 1, 12, 23, 34, 45, 56, 67, 78, 89, 100 ]`
 
-
 `npx distributions-service serve -p 9000`
 
 ## rest api
