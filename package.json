@@ -10,7 +10,8 @@
 		"start": "npm run build && node dist/index.js $1",
 		"start-service": "npm run build-service && node dist/index.js serve",
 		"watch": "npm-watch start-service",
-		"publish-patch": "npm run build && npm version patch && npm publish && git push"
+		"publish-patch": "npm run build && npm version patch && npm publish && git push",
+		"publish-minor": "npm run build && npm version minor && npm publish && git push"
 	},
 	"keywords": [],
 	"author": "Tyson Hester",
