@@ -30,31 +30,25 @@ export const createStateEngine = (initialState = {}) => {
 				state,
 				dispatch
 			] = useReducer(
-				(state, {
-					type,
-					...action
-				}) => {
-					const newState = { ...actions[type].reducer(state, action) }
-					console.log(`%cDISPATCHED: %c${type}`, 'color: #00c000', 'color: #f070f0')
-					console.log('%c\tPREVIOUS STATE', 'color: #555555', state)
-					console.log('%c\tACTION', 'color: #c09000', { type, ...action })
-					console.log('%c\tNEW STATE', 'color: #0090c0', newState)
-					return newState
-				},
-				initialState
+				(state, newState) => newState,
+				{ __se: { started: Date.now() }, ...initialState }
 			)
 			return [
 				() => state,
 				() => types.reduce((actionDispatch, type) => {
-					const { handler } = actions[type]
+					const { handler, reducer } = actions[type]
 					actionDispatch[type] = async (...args) => {
-
-						console.log('dispatch called', type, args)
-
-						dispatch({
+						const result = await handler.apply(null, args)
+						const action = ({
 							type,
-							...await handler.apply(null, args)
+							...result
 						})
+						const newState = reducer(state, action)
+						dispatch(newState)
+						console.log(`%cDISPATCHED: %c${type} %c@${Date.now() - state.__se.started}ms`, 'color: #00cc00', 'color: #ff77ff', 'color: #ff9999')
+						console.log('%c\tPREVIOUS STATE', 'color: #555555', state)
+						console.log('%c\tACTION', 'color: #cc9900', action)
+						console.log('%c\tNEW STATE', 'color: #0099cc', newState)
 					}
 					return actionDispatch
 				}, {})

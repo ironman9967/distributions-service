@@ -13,32 +13,6 @@ export const Socket = ({
 	const [ getState, getActions ] = useAppContext()
 
 	createAction([
-		'socketConnect',
-		socket => {
-
-			console.log('socketConnect handler called')
-
-			const dispatchConnectionChange = connected =>
-				() => getActions().socketConnectionChange(connected)
-			socket.removeAllListeners()
-			socket.once('connect', dispatchConnectionChange(true))
-			socket.once('disconnect', dispatchConnectionChange(false))
-			socket.open()
-		},
-		state => ({
-			...state,
-			socket: { ...state.socket, connecting: true },
-		})
-	])
-	createAction([
-		'socketDisconnect',
-		socket => socket.close(),
-		state => ({
-			...state,
-			socket: { ...state.socket, connect: false },
-		})
-	])
-	createAction([
 		'socketConnectionChange',
 		connected => ({ connected }),
 		(state, { connected }) => ({
@@ -46,27 +20,43 @@ export const Socket = ({
 			socket: { ...state.socket, connected, connecting: false },
 		})
 	])
+	createAction([
+		'socketOpen',
+		socket => {
+			const dispatchConnectionChange = connected =>
+				() => getActions().socketConnectionChange(connected)
+			socket.removeAllListeners()
+			socket.once('connect', dispatchConnectionChange(true))
+			socket.once('disconnect', dispatchConnectionChange(false))
+			socket.open()
+		},
+		state => ({ ...state, socket: { ...state.socket, connecting: true } })
+	])
+	createAction([
+		'socketClose',
+		socket => socket.close(),
+		state => ({ ...state, socket: { ...state.socket, connecting: false } })
+	])
+	createAction([
+		'socketShouldConnect',
+		connect => ({ connect }),
+		(state, { connect }) => ({ ...state, socket: { ...state.socket, connect } })
+	])
 
 	const { socket: { connected, connect, connecting } } = getState()
 
-	const { socketConnect, socketDisconnect } = getActions()
+	const { socketOpen, socketClose } = getActions()
 
 	useEffect(() => {
-		console.log('useEffect called', { connect, connected, connecting })
-
 		if (connect) {
-			if (!connected) {
-				if (!connecting) {
-					socketConnect(socket)
-				}
+			if (!connected && !connecting) {
+				socketOpen(socket)
 			}
 		}
-		else {
-			if (connected) {
-				socketDisconnect(socket)
-			}
+		else if (connected) {
+			socketClose(socket)
 		}
-	}, [ socketConnect, socketDisconnect, connect, connected, connecting ])
+	})
 
 	return ( <div> --- Socket --- { children } </div> )
 }
