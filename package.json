@@ -3,10 +3,12 @@
 	"version": "0.2.5",
 	"bin": "dist/index.js",
 	"scripts": {
-		"build": "rm -rf dist && npx babel src -d dist && cp package.json dist",
-		"index": "node dist/index.js",
-		"start": "npm run build && npm run index -- $1",
-		"start-service": "npm run build && npm run index -- serve",
+		"build": "npm run build-service && npm run build-ui",
+		"build-service": "rm -rf dist && npx babel src -d dist --ignore src/ui && cp package.json dist && npm run copy-ui",
+		"build-ui": "rm -rf dist/public && cd src/ui && npm run build && cd ../.. && npm run copy-ui",
+		"copy-ui": "cp -rf src/ui/build dist/public",
+		"start": "npm run build && node dist/index.js $1",
+		"start-service": "npm run build-service && node dist/index.js serve",
 		"watch": "npm-watch start-service",
 		"publish-patch": "npm run build && npm version patch && npm publish && git push"
 	},
@@ -41,9 +43,8 @@
 	},
 	"watch": {
 		"start-service": {
-			"patterns": [
-				"src"
-			],
+			"patterns": [ "src" ],
+			"ignore": [ "ui/" ],
 			"extensions": "js",
 			"quite": true
 		}
@@ -54,6 +55,7 @@
 		"@hapi/good-console": "^8.1.0",
 		"@hapi/good-squeeze": "^5.2.0",
 		"@hapi/hapi": "^18.3.1",
+		"@hapi/inert": "^5.2.1",
 		"@tweenjs/tween.js": "^17.4.0",
 		"cli": "^1.0.1",
 		"lodash": "^4.17.15",

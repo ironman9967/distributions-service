@@ -5,6 +5,7 @@ import '@babel/polyfill'
 import cli from 'cli'
 
 import Hapi from '@hapi/hapi'
+import Inert from '@hapi/inert'
 import Good from '@hapi/good'
 import socketio from 'socket.io'
 
@@ -25,10 +26,12 @@ const createDistro = createTweenDistroCreator({
 export const serve = async ({ port }) => {
 	const createServer = createServerCreator({
 		Hapi,
+		Inert,
 		Good,
 		socketio,
 		_get,
-		createDistro
+		createDistro,
+		pathToPublic: `${__dirname}/public`
 	})
 
 	const server = await createServer({ port })
