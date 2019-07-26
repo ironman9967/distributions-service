@@ -1,6 +1,6 @@
 {
 	"name": "distributions-service",
-	"version": "0.2.5",
+	"version": "0.3.0",
 	"bin": "dist/index.js",
 	"scripts": {
 		"build": "npm run build-service && npm run build-ui",
@@ -44,8 +44,12 @@
 	},
 	"watch": {
 		"start-service": {
-			"patterns": [ "src" ],
-			"ignore": [ "ui/" ],
+			"patterns": [
+				"src"
+			],
+			"ignore": [
+				"ui/"
+			],
 			"extensions": "js",
 			"quite": true
 		}
