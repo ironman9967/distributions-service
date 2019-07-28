@@ -19,11 +19,11 @@ export const socketInitialState = {
 }
 
 export const Socket = ({
-	useAppContext,
+	useFaze,
 	createAction,
 	children
 }) => {
-	const [ getState, getActions ] = useAppContext()
+	const [ getState, getActions ] = useFaze()
 
 	createAction([
 		'socketConnectionChange',

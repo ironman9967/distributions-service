@@ -1,14 +1,14 @@
 
 import React, { useEffect } from 'react'
 
-import { createStateEngine } from '../../state'
+import { create as createFazor } from 'fazor'
 
 import { Socket, socketInitialState } from '../socket'
 
 const distroInitialState = { distro: {} }
 
-const Distro = ({ useAppContext }) => {
-	const [ getState, getActions ] = useAppContext()
+const Distro = ({ useFaze }) => {
+	const [ getState, getActions ] = useFaze()
 
 	useEffect(() => {
 		const { distro: { test } } = getState()
@@ -38,18 +38,18 @@ const Distro = ({ useAppContext }) => {
 
 export default props => {
 	const [
-		createAction,
-		useAppContext
-	] = createStateEngine({
+		useFaze,
+		createAction
+	] = createFazor({
 		...socketInitialState,
 		...distroInitialState
 	})
 
 	return (
-		<useAppContext.Provider>
-			<Socket useAppContext={ useAppContext } createAction={ createAction }>
-				<Distro  useAppContext={ useAppContext } />
+		<useFaze.Provider>
+			<Socket useFaze={ useFaze } createAction={ createAction }>
+				<Distro  useFaze={ useFaze } />
 			</Socket>
-		</useAppContext.Provider>
+		</useFaze.Provider>
 	)
 }
