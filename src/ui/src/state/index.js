@@ -30,25 +30,31 @@ export const createStateEngine = (initialState = {}) => {
 				state,
 				dispatch
 			] = useReducer(
-				(state, newState) => newState,
-				{ __se: { started: Date.now() }, ...initialState }
+				(state, { type, ...action }) => {
+					const { reducer } = actions[type]
+					const newState = reducer(state, action)
+					console.log('%c\tPREVIOUS STATE', 'color: #555555', state)
+					console.log('%c\tACTION', 'color: #cc9900', { type, ...action })
+					console.log('%c\tNEW STATE', 'color: #0099cc', newState)
+					return { ...newState }
+				},
+				{ __stateEngine: { started: Date.now() }, ...initialState }
 			)
 			return [
-				() => state,
+				() => ({ ...state }),
 				() => types.reduce((actionDispatch, type) => {
-					const { handler, reducer } = actions[type]
 					actionDispatch[type] = async (...args) => {
-						const result = await handler.apply(null, args)
-						const action = ({
-							type,
-							...result
-						})
-						const newState = reducer(state, action)
-						dispatch(newState)
-						console.log(`%cDISPATCHED: %c${type} %c@${Date.now() - state.__se.started}ms`, 'color: #00cc00', 'color: #ff77ff', 'color: #ff9999')
-						console.log('%c\tPREVIOUS STATE', 'color: #555555', state)
-						console.log('%c\tACTION', 'color: #cc9900', action)
-						console.log('%c\tNEW STATE', 'color: #0099cc', newState)
+						const result = await actions[type].handler.apply(null, args)
+						if (result === void 0 || typeof result === 'object') {
+							console.log(`%cDISPATCHED: %c${type} %c@${Date.now() - state.__stateEngine.started}ms`, 'color: #00cc00', 'color: #ff77ff', 'color: #ff9999')
+							dispatch({
+								type,
+								...result
+							})
+						}
+						else if (result !== false) {
+							throw new Error(`action handler result must be undefined, an object to dispatch or false to abort dispatch`)
+						}
 					}
 					return actionDispatch
 				}, {})

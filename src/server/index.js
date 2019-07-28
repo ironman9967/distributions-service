@@ -47,7 +47,11 @@ export const createServerCreator = ({
 	})
 	io.on('connection', socket => {
 		const { client: { id, conn: { remoteAddress } } } = socket
+
 		console.log(`new client (${id}) connected from ${remoteAddress}`)
+
+		setInterval(() => socket.emit('test', 1, 2, 3), 2500)
+
 		socket.on('distro', async params => {
 			console.log(`distro-${ params.id }`)
 			socket.emit(`distro-${ params.id }`, await createDistro(params))
