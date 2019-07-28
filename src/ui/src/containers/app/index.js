@@ -13,8 +13,8 @@ const Distro = ({ useAppContext }) => {
 	useEffect(() => {
 		const { distro: { test } } = getState()
 		if (test === void 0) {
-			const { socketOnce } = getActions()
-			socketOnce(
+			const { socketOn } = getActions()
+			socketOn(
 				'test',
 				intArr => ({ intArr, something: 'from test event' }),
 				(state, { intArr, something }) => ({
@@ -29,7 +29,10 @@ const Distro = ({ useAppContext }) => {
 	})
 
 	return (
-		( <div> --- Distro --- <button onClick={() => console.log(getState())}>---</button></div> )
+		( <div> --- Distro --- <button onClick={() => {
+			const { socketRemoveListener } = getActions()
+			socketRemoveListener('test')
+		}}>---</button></div> )
 	)
 }
 

@@ -151,27 +151,21 @@ export const Socket = ({
 			socket.removeListener(evt)
 			return { evt }
 		},
-		({ socket: { eventListeners: el, ...socket }, ...state }, { evt }) => {
-			const nel = Object.keys(el).reduce((nel, type) => {
-				nel[type] = el[type].reduce((nelType, e) => {
-					if (e !== evt) {
-						nelType.push(e)
-					}
-					return nelType
-				}, [])
-				return nel
-			}, {})
-
-			console.log('socketRemoveListener', { socket: { eventListeners: el, ...socket }, ...state })
-
-			return {
-				...state,
-				socket: {
-					...socket,
-					eventListeners: nel
-				}
+		({ socket: { eventListeners: el, ...socket }, ...state }, { evt }) => ({
+			...state,
+			socket: {
+				...socket,
+				eventListeners: Object.keys(el).reduce((nel, type) => {
+					nel[type] = el[type].reduce((nelType, e) => {
+						if (e !== evt) {
+							nelType.push(e)
+						}
+						return nelType
+					}, [])
+					return nel
+				}, {})
 			}
-		}
+		})
 	])
 
 	useEffect(() => {
