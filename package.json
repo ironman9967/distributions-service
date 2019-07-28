@@ -1,6 +1,6 @@
 {
 	"name": "distributions-service",
-	"version": "0.4.2",
+	"version": "0.4.3",
 	"bin": "dist/index.js",
 	"scripts": {
 		"build": "npm run build-service && npm run build-ui",
