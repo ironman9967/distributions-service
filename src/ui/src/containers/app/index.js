@@ -1,9 +1,9 @@
 
 import React, { useEffect } from 'react'
 
-import { create as createFazor } from 'fazor'
+import { create as createFazor } from '@fazor/fazor'
 
-import { Socket, socketInitialState } from '../socket'
+import { Socket, socketInitialState } from '@fazor/socket.io-client'
 
 const distroInitialState = { distro: {} }
 
@@ -48,7 +48,7 @@ export default props => {
 	return (
 		<useFaze.Provider>
 			<Socket useFaze={ useFaze } createAction={ createAction }>
-				<Distro  useFaze={ useFaze } />
+				<Distro useFaze={ useFaze } />
 			</Socket>
 		</useFaze.Provider>
 	)
