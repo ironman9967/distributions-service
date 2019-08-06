@@ -1,5 +1,5 @@
 
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import { loggingLevels } from '@fazor/fazor'
 
@@ -10,14 +10,21 @@ import { getFaze } from '../../state'
 export default () => {
 	const [ state, actions, [ , logDebug ] ] = getFaze()
 
-	const { counter, __fazor: { loggingLevelName } } = state
+	const {
+		counter,
+		socket: { connected, id: socketId },
+		__fazor: { loggingLevelName }
+	} = state
 	const {
 		inc,
 		ignored,
+		getDistro,
 		__fazorSetLoggingLevel,
 		socketOn,
 		socketRemoveListener,
-		socketRemoveAllListeners
+		socketRemoveAllListeners,
+		socketEventFromServer,
+		socketEmit
 	} = actions
 
 	const increment = async () => {
@@ -35,7 +42,18 @@ export default () => {
 		__fazorSetLoggingLevel(loggingLevels[nextLoggingLevelName])
 	}
 
-	socketOn(state, actions, 'test')
+	useEffect(() => {
+		if (socketId) {
+			socketOn(connected, socketEventFromServer, [
+				`distro-${socketId}`,
+				distro => distro,
+				({ distros, ...state }, { id, ...distro }) => ({
+					...state,
+					distros: distros.concat([{ id: `${id}-${Date.now()}`, ...distro }])
+				})
+			])
+		}
+	}, [ socketId, socketOn, connected, socketEventFromServer ])
 
 	return (
 		<div>
@@ -48,6 +66,13 @@ export default () => {
 			<h5> --- socket</h5>
 			<button onClick={() => socketRemoveListener('fazor_socket.io-client_ping')}>remove ping</button>
 			<button onClick={socketRemoveAllListeners}>remove all</button>
+			{
+				socketId
+					? <button onClick={() =>
+						getDistro(socketEmit, socketId, 'Linear.None', 10, 1, 10)}
+					>get distro</button>
+					: void 0
+			}
 		</div>
 	)
 }

@@ -11,7 +11,11 @@ const [
 	setInitialFaze
 ] = createFazor({ loggingLevel: loggingLevels.dispatchedOnly })
 
-export const getFaze = setInitialFaze({ ...socketInitialState, counter: 0 })
+export const getFaze = setInitialFaze({
+	...socketInitialState,
+	counter: 0,
+	distros: []
+})
 
 export const createActions = () => {
 	createAction([
@@ -21,6 +25,13 @@ export const createActions = () => {
 			...state,
 			counter: counter + incBy
 		})
+	])
+
+	createAction([
+		'getDistro',
+		(socketEmit, id, shape, length, start, end) => {
+			socketEmit('distro', { id, shape, length, start, end })
+		}
 	])
 
 	createAction('ignored', () => false)

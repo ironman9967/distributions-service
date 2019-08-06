@@ -65,13 +65,16 @@ export const createServerCreator = ({
 			ping = setInterval(() => {
 				console.log(`pinging ${id}`)
 				emitPing()
-			}, 10000)
+			}, 120000)
 			emitPing(true)
 		}, 1000)
 
 		socket.on('distro', async params => {
 			console.log(`distro-${ params.id }`)
-			socket.emit(`distro-${ params.id }`, await createDistro(params))
+			socket.emit(`distro-${ params.id }`, {
+				...params,
+				values: await createDistro(params)
+			})
 		})
 		socket.once('disconnect', () => {
 			console.log(`${id} disconnected`)
