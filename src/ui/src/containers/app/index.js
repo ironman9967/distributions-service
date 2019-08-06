@@ -1,55 +1,43 @@
 
-import React, { useEffect } from 'react'
+import React from 'react'
 
-import { create as createFazor } from '@fazor/fazor'
+import { loggingLevels } from '@fazor/fazor'
 
-import { Socket, socketInitialState } from '@fazor/socket.io-client'
+import { Socket } from '@fazor/socket.io-client'
 
-const distroInitialState = { distro: {} }
+import { getFaze } from '../../state'
 
-const Distro = ({ useFaze }) => {
-	const [ getState, getActions ] = useFaze()
+export default () => {
+	const [ state, actions, [ , logDebug ] ] = getFaze()
 
-	useEffect(() => {
-		const { distro: { test } } = getState()
-		if (test === void 0) {
-			const { socketOn } = getActions()
-			socketOn(
-				'test',
-				intArr => ({ intArr, something: 'from test event' }),
-				(state, { intArr, something }) => ({
-					...state,
-					distro: {
-						...state.distro,
-						test: { intArr, something }
-					}
-				})
-			)
-		}
-	})
+	const { counter, __fazor: { loggingLevelName } } = state
+	const { inc, ignored, __fazorSetLoggingLevel, socketOn } = actions
 
-	return (
-		( <div> --- Distro --- <button onClick={() => {
-			const { socketRemoveListener } = getActions()
-			socketRemoveListener('test')
-		}}>---</button></div> )
-	)
-}
+	const increment = async () => {
+		logDebug('inc dispatch')
+		const result = await inc(1)
+		logDebug('inc dispatch result', result)
+	}
 
-export default props => {
-	const [
-		useFaze,
-		createAction
-	] = createFazor({
-		...socketInitialState,
-		...distroInitialState
-	})
+	const nextLoggingLevel = () => {
+		const loggingLevelNames = Object.keys(loggingLevels)
+		const nextLoggingLevelNameIndex = loggingLevelNames.indexOf(loggingLevelName) + 1
+		const nextLoggingLevelName = nextLoggingLevelNameIndex === loggingLevelNames.length
+			? loggingLevelNames[0]
+			: loggingLevelNames[nextLoggingLevelNameIndex]
+		__fazorSetLoggingLevel(loggingLevels[nextLoggingLevelName])
+	}
+
+	socketOn(state, actions, 'test')
 
 	return (
-		<useFaze.Provider>
-			<Socket useFaze={ useFaze } createAction={ createAction }>
-				<Distro useFaze={ useFaze } />
-			</Socket>
-		</useFaze.Provider>
+		<div>
+			<h3> --- count: {counter}</h3>
+			<button onClick={increment}>increment</button>
+			<button onClick={ignored}>ignore me</button>
+			<h5> --- logging level: {loggingLevelName}</h5>
+			<button onClick={nextLoggingLevel}>next logging level</button>
+			<Socket getFaze={getFaze} />
+		</div>
 	)
 }

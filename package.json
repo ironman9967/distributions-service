@@ -63,6 +63,7 @@
 		"@hapi/hapi": "^18.3.1",
 		"@hapi/inert": "^5.2.1",
 		"@tweenjs/tween.js": "^17.4.0",
+		"beeper": "^2.0.0",
 		"cli": "^1.0.1",
 		"lodash": "^4.17.15",
 		"socket.io": "^2.2.0"

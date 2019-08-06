@@ -7,8 +7,14 @@ import App from './containers/app'
 
 import * as serviceWorker from './serviceWorker'
 
+import { getFaze, createActions } from './state'
+
+createActions()
+
 ReactDOM.render(
-	<App />,
+	<getFaze.Provider>
+		<App />
+	</getFaze.Provider>,
 	document.getElementById('root')
 )
 

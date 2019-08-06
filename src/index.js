@@ -2,6 +2,8 @@
 
 import '@babel/polyfill'
 
+import { spawn } from 'child_process'
+
 import cli from 'cli'
 
 import Hapi from '@hapi/hapi'
@@ -31,7 +33,8 @@ export const serve = async ({ port }) => {
 		socketio,
 		_get,
 		createDistro,
-		pathToPublic: `${__dirname}/public`
+		pathToPublic: `${__dirname}/public`,
+		beep: () => spawn('tput', [ 'bel' ], { stdio: 'inherit' })
 	})
 
 	const server = await createServer({ port })

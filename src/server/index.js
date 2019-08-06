@@ -6,7 +6,8 @@ export const createServerCreator = ({
 	socketio,
 	_get,
 	createDistro,
-	pathToPublic
+	pathToPublic,
+	beep
 }) => async ({ port }) => {
 	const server = Hapi.server({
 		port,
@@ -34,6 +35,8 @@ export const createServerCreator = ({
 		}
 	})
 
+	let clientConnCount = 0
+
 	server.route({
 		method: 'GET',
 		path: '/{param*}',
@@ -48,9 +51,22 @@ export const createServerCreator = ({
 	io.on('connection', socket => {
 		const { client: { id, conn: { remoteAddress } } } = socket
 
-		console.log(`new client (${id}) connected from ${remoteAddress}`)
+		console.log(`new client (${id}) connected from ${remoteAddress}`
+		 	+ `- clients connected: ${++clientConnCount}`)
+		beep()
 
-		setInterval(() => socket.emit('test', 1, 2, 3), 2500)
+		const emitPing = (first = false) => socket.emit('fazor_socket.io-client_ping', {
+			id,
+			now: Date.now(),
+			first
+		})
+		setTimeout(() => {
+			setInterval(() => {
+				console.log(`pinging ${id}`)
+				emitPing()
+			}, 10000)
+			emitPing(true)
+		}, 1000)
 
 		socket.on('distro', async params => {
 			console.log(`distro-${ params.id }`)
