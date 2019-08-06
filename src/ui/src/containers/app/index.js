@@ -11,7 +11,14 @@ export default () => {
 	const [ state, actions, [ , logDebug ] ] = getFaze()
 
 	const { counter, __fazor: { loggingLevelName } } = state
-	const { inc, ignored, __fazorSetLoggingLevel, socketOn } = actions
+	const {
+		inc,
+		ignored,
+		__fazorSetLoggingLevel,
+		socketOn,
+		socketRemoveListener,
+		socketRemoveAllListeners
+	} = actions
 
 	const increment = async () => {
 		logDebug('inc dispatch')
@@ -38,6 +45,9 @@ export default () => {
 			<h5> --- logging level: {loggingLevelName}</h5>
 			<button onClick={nextLoggingLevel}>next logging level</button>
 			<Socket getFaze={getFaze} />
+			<h5> --- socket</h5>
+			<button onClick={() => socketRemoveListener('fazor_socket.io-client_ping')}>remove ping</button>
+			<button onClick={socketRemoveAllListeners}>remove all</button>
 		</div>
 	)
 }

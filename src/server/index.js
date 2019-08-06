@@ -60,8 +60,9 @@ export const createServerCreator = ({
 			now: Date.now(),
 			first
 		})
+		let ping
 		setTimeout(() => {
-			setInterval(() => {
+			ping = setInterval(() => {
 				console.log(`pinging ${id}`)
 				emitPing()
 			}, 10000)
@@ -71,6 +72,11 @@ export const createServerCreator = ({
 		socket.on('distro', async params => {
 			console.log(`distro-${ params.id }`)
 			socket.emit(`distro-${ params.id }`, await createDistro(params))
+		})
+		socket.once('disconnect', () => {
+			console.log(`${id} disconnected`)
+			clientConnCount--
+			clearTimeout(ping)
 		})
 	})
 
