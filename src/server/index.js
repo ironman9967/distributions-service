@@ -65,7 +65,7 @@ export const createServerCreator = ({
 			ping = setInterval(() => {
 				console.log(`pinging ${id}`)
 				emitPing()
-			}, 120000)
+			}, 5000)//120000)
 			emitPing(true)
 		}, 1000)
 

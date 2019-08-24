@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@fazor/fazor": "^0.6.4",
-    "@fazor/socket.io-client": "^0.3.0",
+    "@fazor/socket.io-client": "^0.4.0",
     "lodash.uniq": "^4.5.0",
     "lodash.without": "^4.4.0",
     "react": "^16.8.6",

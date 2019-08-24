@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react'
+import React from 'react'
 
 import { loggingLevels } from '@fazor/fazor'
 
@@ -12,7 +12,7 @@ export default () => {
 
 	const {
 		counter,
-		socket: { connected, id: socketId },
+		socket: { connected, id: socketId, listeners },
 		__fazor: { loggingLevelName }
 	} = state
 	const {
@@ -20,11 +20,10 @@ export default () => {
 		ignored,
 		getDistro,
 		__fazorSetLoggingLevel,
-		socketOn,
 		socketRemoveListener,
 		socketRemoveAllListeners,
-		socketEventFromServer,
-		socketEmit
+		socketEmit,
+		socketShouldConnect
 	} = actions
 
 	const increment = async () => {
@@ -42,19 +41,6 @@ export default () => {
 		__fazorSetLoggingLevel(loggingLevels[nextLoggingLevelName])
 	}
 
-	useEffect(() => {
-		if (socketId) {
-			socketOn(connected, socketEventFromServer, [
-				`distro-${socketId}`,
-				distro => distro,
-				({ distros, ...state }, { id, ...distro }) => ({
-					...state,
-					distros: distros.concat([{ id: `${id}-${Date.now()}`, ...distro }])
-				})
-			])
-		}
-	}, [ socketId, socketOn, connected, socketEventFromServer ])
-
 	return (
 		<div>
 			<h3> --- count: {counter}</h3>
@@ -62,10 +48,13 @@ export default () => {
 			<button onClick={ignored}>ignore me</button>
 			<h5> --- logging level: {loggingLevelName}</h5>
 			<button onClick={nextLoggingLevel}>next logging level</button>
-			<Socket getFaze={getFaze} />
 			<h5> --- socket</h5>
+			<Socket getFaze={getFaze} />
+				<button onClick={() =>
+					socketShouldConnect(!connected)}
+				>{connected ? 'disconnect' : 'connect'}</button>
 			<button onClick={() => socketRemoveListener('fazor_socket.io-client_ping')}>remove ping</button>
-			<button onClick={socketRemoveAllListeners}>remove all</button>
+			<button onClick={() => socketRemoveAllListeners(listeners)}>remove all</button>
 			{
 				socketId
 					? <button onClick={() =>
